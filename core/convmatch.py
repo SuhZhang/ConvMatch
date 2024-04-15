@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.init as init
 
 
 class GridPosition(nn.Module):
@@ -49,27 +50,78 @@ class AttentionPropagation(nn.Module):
         return motion1_new
 
 
-class ResBlock(nn.Module):
+class SEAttention(nn.Module):
+    def __init__(self, channel, reduction):
+        nn.Module.__init__(self)
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.fc = nn.Sequential(
+            nn.Linear(channel, channel // reduction, bias=False),
+            nn.ReLU(inplace=True),
+            nn.Linear(channel // reduction, channel, bias=False),
+            nn.Sigmoid()
+        )
+
+    def init_weights(self):
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                init.kaiming_normal_(m.weight, mode='fan_out')
+                if m.bias is not None:
+                    init.constant_(m.bias, 0)
+            elif isinstance(m, nn.BatchNorm2d):
+                init.constant_(m.weight, 1)
+                init.constant_(m.bias, 0)
+            elif isinstance(m, nn.Linear):
+                init.normal_(m.weight, std=0.001)
+                if m.bias is not None:
+                    init.constant_(m.bias, 0)
+
+    def forward(self, x):
+        b, c, _, _ = x.size()
+        y = self.avg_pool(x).view(b, c)
+        y = self.fc(y).view(b, c, 1, 1)
+        return x * y.expand_as(x)
+
+
+class BilateralFilterBlock(nn.Module):
     def __init__(self, channels):
         nn.Module.__init__(self)
-        self.net = nn.Sequential(
-            nn.Conv2d(channels, channels, 3, padding=1),
+        self.space_filter = nn.Sequential(
+            nn.Conv2d(channels, channels, 3, padding=1, padding_mode='replicate'),
             nn.BatchNorm2d(channels),
             nn.ReLU(inplace=True),
-            nn.Conv2d(channels, channels, 3, padding=1),
+            nn.Conv2d(channels, channels, 3, padding=1, padding_mode='replicate'),
             nn.BatchNorm2d(channels),
             nn.ReLU(inplace=True),
         )
+        self.intensity_filter = nn.Sequential(
+            nn.Conv2d(channels, channels, 3, padding=1, padding_mode='replicate'),
+            nn.BatchNorm2d(channels),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(channels, channels, 3, padding=1, padding_mode='replicate'),
+            nn.BatchNorm2d(channels),
+            nn.ReLU(inplace=True),
+        )
+        self.se_net = SEAttention(channels,reduction=2)
+        self.fuse = nn.Sequential(
+            nn.Conv2d(2*channels, channels, 1),
+            nn.BatchNorm2d(channels),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(channels, channels, 1),
+            nn.BatchNorm2d(channels),
+        )
 
     def forward(self, x):
-        x = self.net(x) + x
+        x_intensity_adjust = self.intensity_filter(x)
+        x_adjust = x * x_intensity_adjust
+        x_fuse = torch.cat([self.space_filter(x_adjust), self.se_net(x)], dim=1)
+        x = self.fuse(x_fuse) + x
         return x
 
 
 class Filter(nn.Module):
     def __init__(self, channels):
         nn.Module.__init__(self)
-        self.resnet = nn.Sequential(*[ResBlock(channels) for _ in range(3)])
+        self.resnet = nn.Sequential(*[BilateralFilterBlock(channels) for _ in range(3)])
         self.scale =  nn.Sequential(
             nn.Conv2d(channels, channels, 1, padding=0),
         )

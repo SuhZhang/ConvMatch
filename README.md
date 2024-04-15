@@ -1,19 +1,23 @@
 # ConvMatch implementation
 
-Pytorch implementation of ConvMatch for AAAI'23 paper ["ConvMatch: Rethinking Network Design for Two-View Correspondence Learning"](https://ojs.aaai.org/index.php/AAAI/article/view/25456), by [Shihua Zhang](https://scholar.google.com/citations?user=7f_tYK4AAAAJ&hl) and [Jiayi Ma](https://scholar.google.com/citations?user=73trMQkAAAAJ&hl).
+Pytorch implementation of ConvMatch for TPAMI'24 paper ["ConvMatch: Rethinking Network Design for Two-View Correspondence Learning"](https://ieeexplore.ieee.org/abstract/document/10323178), by [Shihua Zhang](https://scholar.google.com/citations?user=7f_tYK4AAAAJ&hl) and [Jiayi Ma](https://scholar.google.com/citations?user=73trMQkAAAAJ&hl).
 
-This paper focuses on establishing correspondences between two images. We design a correspondence learning network called ConvMatch that for the first time can leverage convolutional neural network (CNN) as the backbone to capture better context, thus avoiding the complex design of extra blocks. Specifically, with the observation that sparse motion vectors and dense motion field can be converted into each other with interpolating and sampling, we regularize the putative motion vectors by estimating dense motion field implicitly, then rectify the errors caused by outliers in local areas with CNN, and finally obtain correct motion vectors from the rectified motion field.
+This paper focuses on establishing correspondences between two images. We design a correspondence learning network called ConvMatch that for the first time can leverage convolutional neural network (CNN) as the backbone to capture better context, thus avoiding the complex design of extra blocks. Specifically, with the observation that sparse motion vectors and dense motion field can be converted into each other with interpolating and sampling, we regularize the putative motion vectors by estimating dense motion field implicitly, then rectify the errors caused by outliers in local areas with CNN, and finally obtain correct motion vectors from the rectified motion field. Rather than simply stacking general CNN networks in the [conference version](https://ojs.aaai.org/index.php/AAAI/article/view/25456), we design special structures for two-view correspondence learning to directly capture global information and to preserve the true vast discontinuities in the motion field, respectively.
 
-This repo contains the code and data for essential matrix estimation described in our AAAI paper. You can switch to branch "convmath_plus" to view the code of the expanded version pubulished in [TPAMI'24](https://ieeexplore.ieee.org/abstract/document/10323178).
+This repo contains the code and data for relative pose estimation on outlier rejection methods described in our TPAMI paper.
 
 If you find this project useful, please cite:
 
 ```
-@inproceedings{zhang2023convmatch,
-  title={ConvMatch: Rethinking Network Design for Two-View Correspondence Learning},
+@article{zhang2023convmatch,
+  title={Convmatch: Rethinking network design for two-view correspondence learning},
   author={Zhang, Shihua and Ma, Jiayi},
-  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
-  year={2023}
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  year={2024},
+  volume={46},
+  number={5},
+  pages={2920-2935},
+  publisher={IEEE}
 }
 ```
 
@@ -30,8 +34,9 @@ For a quick start, clone the repo and download the pretrained model.
 ```bash
 git clone https://github.com/SuhZhang/ConvMatch 
 cd ConvMatch 
+git checkout convmatch_plus
 ```
-Then download the pretrained models from [here](https://drive.google.com/drive/folders/1JKuIWhMXe9ve3wRPb_xZmX37ZH1bxAC3).
+Then download the pretrained models from [here](https://drive.google.com/drive/folders/1v7mvavE30vmG-WTUwFA3bAt6ElPosIBq?usp=sharing).
 
 Then run the feature matching with demo ConvMatch.
 

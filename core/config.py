@@ -109,13 +109,13 @@ train_arg.add_argument(
 train_arg.add_argument(
     "--num_processor", type=int, default=8, help='numbers of used cpu')
 train_arg.add_argument(
-    "--train_iter", type=int, default=500000, help=""
+    "--train_iter", type=int, default=600000, help=""
     "training iterations to perform")
 train_arg.add_argument(
     "--log_base", type=str, default="../model/", help=""
     "save directory name inside results")
 train_arg.add_argument(
-    "--log_suffix", type=str, default="convmatch", help=""
+    "--log_suffix", type=str, default="convmatch_plus", help=""
     "suffix of log dir")
 train_arg.add_argument(
     "--val_intv", type=int, default=10000, help=""

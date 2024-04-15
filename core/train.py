@@ -23,9 +23,6 @@ def train_step(step, optimizer, model, match_loss, data):
         loss_val += [geo_loss, cla_loss, l2_loss]
     optimizer.zero_grad()
     loss.backward()
-    # sun3d training
-    # if step == 80000 + 1:
-    #     torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=20, norm_type=2)
     for name, param in model.named_parameters():
         if torch.any(torch.isnan(param.grad)):
             print('skip because nan')

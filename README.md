@@ -1,10 +1,10 @@
 # ConvMatch implementation
 
-Pytorch implementation of ConvMatch for AAAI'23 paper ["ConvMatch: Rethinking Network Design for Two-View Correspondence Learning"](https://ojs.aaai.org/index.php/AAAI/article/view/25456), by Shihua Zhang and [Jiayi Ma](https://scholar.google.com/citations?user=73trMQkAAAAJ&hl=en&oi=ao).
+Pytorch implementation of ConvMatch for AAAI'23 paper ["ConvMatch: Rethinking Network Design for Two-View Correspondence Learning"](https://ojs.aaai.org/index.php/AAAI/article/view/25456), by [Shihua Zhang](https://scholar.google.com/citations?user=7f_tYK4AAAAJ&hl) and [Jiayi Ma](https://scholar.google.com/citations?user=73trMQkAAAAJ&hl).
 
 This paper focuses on establishing correspondences between two images. We design a correspondence learning network called ConvMatch that for the first time can leverage convolutional neural network (CNN) as the backbone to capture better context, thus avoiding the complex design of extra blocks. Specifically, with the observation that sparse motion vectors and dense motion field can be converted into each other with interpolating and sampling, we regularize the putative motion vectors by estimating dense motion field implicitly, then rectify the errors caused by outliers in local areas with CNN, and finally obtain correct motion vectors from the rectified motion field.
 
-This repo contains the code and data for essential matrix estimation described in our AAAI paper.
+This repo contains the code and data for essential matrix estimation described in our AAAI paper. You can switch to branch "convmath_plus" to view the code of the expanded version pubulished in [TPAMI'24](https://ieeexplore.ieee.org/abstract/document/10323178).
 
 If you find this project useful, please cite:
 

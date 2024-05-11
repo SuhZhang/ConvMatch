@@ -4,7 +4,7 @@ Pytorch implementation of ConvMatch for AAAI'23 paper ["ConvMatch: Rethinking Ne
 
 This paper focuses on establishing correspondences between two images. We design a correspondence learning network called ConvMatch that for the first time can leverage convolutional neural network (CNN) as the backbone to capture better context, thus avoiding the complex design of extra blocks. Specifically, with the observation that sparse motion vectors and dense motion field can be converted into each other with interpolating and sampling, we regularize the putative motion vectors by estimating dense motion field implicitly, then rectify the errors caused by outliers in local areas with CNN, and finally obtain correct motion vectors from the rectified motion field.
 
-This repo contains the code and data for essential matrix estimation described in our AAAI paper. You can switch to branch "convmath_plus" to view the code of the expanded version pubulished in [TPAMI'24](https://ieeexplore.ieee.org/abstract/document/10323178).
+This repo contains the code and data for essential matrix estimation described in our AAAI paper. You can switch to branch "convmatch_plus" to view the code of the expanded version published in [TPAMI'24](https://ieeexplore.ieee.org/abstract/document/10323178).
 
 If you find this project useful, please cite:
 
@@ -89,9 +89,9 @@ You can change the default settings for network structure and training process i
 
 ### Train with your own local feature or data 
 
-The provided models are trained using SIFT. You had better retrain the model if you want to use ConvMatch with your own local feature, such as RootSIFT, SuperPoint and etc. 
+The provided models are trained using SIFT. You had better retrain the model if you want to use ConvMatch with your own local feature, such as RootSIFT, SuperPoint, etc. 
 
-You can follow the provided example scirpts in `./dump_match` to generate dataset for your own local feature or data.
+You can follow the provided example scripts in `./dump_match` to generate dataset for your own local feature or data.
 
 ## Acknowledgement
 This code is borrowed from [OANet](https://github.com/zjhthu/OANet) and [CLNet](https://github.com/sailor-z/CLNet). If using the part of code related to data generation, testing and evaluation, please cite these papers.
